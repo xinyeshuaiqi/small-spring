@@ -1,12 +1,9 @@
 package cn.bugstack.springframework.beans.factory.support;
 
+import java.lang.reflect.Constructor;
+
 import cn.bugstack.springframework.beans.BeansException;
 import cn.bugstack.springframework.beans.factory.config.BeanDefinition;
-
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Constructor;
-import java.util.*;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 博客：https://bugstack.cn - 沉淀、分享、成长，让自己和他人都能有所收获！
@@ -33,6 +30,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     protected Object createBeanInstance(BeanDefinition beanDefinition, String beanName, Object[] args) {
         Constructor constructorToUse = null;
         Class<?> beanClass = beanDefinition.getBeanClass();
+
+        // 挑选构造器
         Constructor<?>[] declaredConstructors = beanClass.getDeclaredConstructors();
         for (Constructor ctor : declaredConstructors) {
             if (null != args && ctor.getParameterTypes().length == args.length) {
@@ -40,6 +39,8 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
                 break;
             }
         }
+
+        // 完成实例化动作
         return getInstantiationStrategy().instantiate(beanDefinition, beanName, constructorToUse, args);
     }
 
