@@ -63,13 +63,19 @@ public abstract class AbstractApplicationEventMulticaster implements Application
      * 监听器是否对该事件感兴趣
      */
     protected boolean supportsEvent(ApplicationListener<ApplicationEvent> applicationListener, ApplicationEvent event) {
+        // 拿到监听器class类型
         Class<? extends ApplicationListener> listenerClass = applicationListener.getClass();
 
         // 按照 CglibSubclassingInstantiationStrategy、SimpleInstantiationStrategy 不同的实例化类型，需要判断后获取目标 class
+        // FIXME: 没太明白。。。   CustomEventListener
         Class<?> targetClass = ClassUtils.isCglibProxyClass(listenerClass) ? listenerClass.getSuperclass() : listenerClass;
-        Type genericInterface = targetClass.getGenericInterfaces()[0];
 
+        // 这是啥几把？   cn.bugstack.springframework.context.ApplicationListener<cn.bugstack.springframework.test.event.CustomEvent>
+        Type genericInterface = targetClass.getGenericInterfaces()[0];
+        // class cn.bugstack.springframework.test.event.CustomEvent
         Type actualTypeArgument = ((ParameterizedType) genericInterface).getActualTypeArguments()[0];
+
+        // cn.bugstack.springframework.test.event.CustomEvent
         String className = actualTypeArgument.getTypeName();
         Class<?> eventClassName;
         try {
