@@ -46,6 +46,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
 
         // 判断 SCOPE_SINGLETON、SCOPE_PROTOTYPE
+        // 单例对象会放在内存
         if (beanDefinition.isSingleton()) {
             registerSingleton(beanName, bean);
         }
